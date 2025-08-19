@@ -19,6 +19,7 @@
 #include <type_traits>
 #include <utility>
 
+#include "absl/base/config.h"
 #include "absl/base/nullability.h"
 #include "absl/strings/match.h"
 #include "absl/strings/string_view.h"
@@ -1787,7 +1788,11 @@ void AudioProcessingImpl::UpdateRecommendedInputVolumeLocked() {
 bool AudioProcessingImpl::CreateAndAttachAecDump(
     absl::string_view file_name,
     int64_t max_log_size_bytes,
+#if defined(ABSL_LTS_RELEASE_VERSION) && ABSL_LTS_RELEASE_VERSION < 20250512
     absl::Nonnull<TaskQueueBase*> worker_queue) {
+#else
+    TaskQueueBase* absl_nonnull worker_queue) {
+#endif
   std::unique_ptr<AecDump> aec_dump =
       AecDumpFactory::Create(file_name, max_log_size_bytes, worker_queue);
   if (!aec_dump) {
@@ -1801,7 +1806,11 @@ bool AudioProcessingImpl::CreateAndAttachAecDump(
 bool AudioProcessingImpl::CreateAndAttachAecDump(
     FILE* handle,
     int64_t max_log_size_bytes,
+#if defined(ABSL_LTS_RELEASE_VERSION) && ABSL_LTS_RELEASE_VERSION < 20250512
     absl::Nonnull<TaskQueueBase*> worker_queue) {
+#else
+    TaskQueueBase* absl_nonnull worker_queue) {
+#endif
   std::unique_ptr<AecDump> aec_dump =
       AecDumpFactory::Create(handle, max_log_size_bytes, worker_queue);
   if (!aec_dump) {

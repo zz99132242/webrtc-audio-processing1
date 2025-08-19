@@ -28,6 +28,7 @@
 #include <string>
 #include <utility>
 
+#include "absl/base/config.h"
 #include "absl/base/nullability.h"
 #include "absl/strings/string_view.h"
 #include "api/array_view.h"
@@ -632,6 +633,7 @@ class RTC_EXPORT AudioProcessing : public RefCountInterface {
   // return value of true indicates that the file has been
   // sucessfully opened, while a value of false indicates that
   // opening the file failed.
+#if defined(ABSL_LTS_RELEASE_VERSION) && ABSL_LTS_RELEASE_VERSION < 20250512
   virtual bool CreateAndAttachAecDump(
       absl::string_view file_name,
       int64_t max_log_size_bytes,
@@ -640,6 +642,16 @@ class RTC_EXPORT AudioProcessing : public RefCountInterface {
       absl::Nonnull<FILE*> handle,
       int64_t max_log_size_bytes,
       absl::Nonnull<TaskQueueBase*> worker_queue) = 0;
+#else
+  virtual bool CreateAndAttachAecDump(absl::string_view file_name,
+                                      int64_t max_log_size_bytes,
+                                      TaskQueueBase* absl_nonnull
+                                          worker_queue) = 0;
+  virtual bool CreateAndAttachAecDump(FILE* absl_nonnull handle,
+                                      int64_t max_log_size_bytes,
+                                      TaskQueueBase* absl_nonnull
+                                          worker_queue) = 0;
+#endif
 
   // TODO(webrtc:5298) Deprecated variant.
   // Attaches provided webrtc::AecDump for recording debugging

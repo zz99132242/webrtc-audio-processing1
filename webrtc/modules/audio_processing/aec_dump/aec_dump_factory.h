@@ -29,6 +29,7 @@ class RTC_EXPORT AecDumpFactory {
   // The AecDump takes responsibility for `handle` and closes it in the
   // destructor. A non-null return value indicates that the file has been
   // sucessfully opened.
+#if defined(ABSL_LTS_RELEASE_VERSION) && ABSL_LTS_RELEASE_VERSION < 20250512
   static absl::Nullable<std::unique_ptr<AecDump>> Create(
       FileWrapper file,
       int64_t max_log_size_bytes,
@@ -41,6 +42,20 @@ class RTC_EXPORT AecDumpFactory {
       absl::Nonnull<FILE*> handle,
       int64_t max_log_size_bytes,
       absl::Nonnull<TaskQueueBase*> worker_queue);
+#else
+  static absl_nullable std::unique_ptr<AecDump> Create(
+      FileWrapper file,
+      int64_t max_log_size_bytes,
+      TaskQueueBase* absl_nonnull worker_queue);
+  static absl_nullable std::unique_ptr<AecDump> Create(
+      absl::string_view file_name,
+      int64_t max_log_size_bytes,
+      TaskQueueBase* absl_nonnull worker_queue);
+  static absl_nullable std::unique_ptr<AecDump> Create(
+      FILE* absl_nonnull handle,
+      int64_t max_log_size_bytes,
+      TaskQueueBase* absl_nonnull worker_queue);
+#endif
 };
 
 }  // namespace webrtc

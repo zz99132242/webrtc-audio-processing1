@@ -16,6 +16,7 @@
 
 namespace webrtc {
 
+#if defined(ABSL_LTS_RELEASE_VERSION) && ABSL_LTS_RELEASE_VERSION < 20250512
 absl::Nullable<std::unique_ptr<AecDump>> AecDumpFactory::Create(
     FileWrapper file,
     int64_t max_log_size_bytes,
@@ -37,3 +38,27 @@ absl::Nullable<std::unique_ptr<AecDump>> AecDumpFactory::Create(
   return nullptr;
 }
 }  // namespace webrtc
+#else
+absl_nullable std::unique_ptr<AecDump> AecDumpFactory::Create(
+    FileWrapper file,
+    int64_t max_log_size_bytes,
+    TaskQueueBase* absl_nonnull worker_queue) {
+  return nullptr;
+}
+
+absl_nullable std::unique_ptr<AecDump> AecDumpFactory::Create(
+    absl::string_view file_name,
+    int64_t max_log_size_bytes,
+    TaskQueueBase* absl_nonnull worker_queue) {
+  return nullptr;
+}
+
+absl_nullable std::unique_ptr<AecDump> AecDumpFactory::Create(
+    FILE* absl_nonnull handle,
+    int64_t max_log_size_bytes,
+    TaskQueueBase* absl_nonnull worker_queue) {
+  return nullptr;
+}
+}  // namespace webrtc
+
+#endif

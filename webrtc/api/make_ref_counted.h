@@ -13,6 +13,7 @@
 #include <type_traits>
 #include <utility>
 
+#include "absl/base/config.h"
 #include "absl/base/nullability.h"
 #include "api/ref_count.h"
 #include "api/scoped_refptr.h"
@@ -86,7 +87,11 @@ template <
     typename std::enable_if<std::is_convertible_v<T*, RefCountInterface*> &&
                                 std::is_abstract_v<T>,
                             T>::type* = nullptr>
+#if defined(ABSL_LTS_RELEASE_VERSION) && ABSL_LTS_RELEASE_VERSION < 20250512
 absl::Nonnull<scoped_refptr<T>> make_ref_counted(Args&&... args) {
+#else
+absl_nonnull scoped_refptr<T> make_ref_counted(Args&&... args) {
+#endif
   return scoped_refptr<T>(new RefCountedObject<T>(std::forward<Args>(args)...));
 }
 
@@ -99,7 +104,11 @@ template <
         !std::is_convertible_v<T*, RefCountInterface*> &&
             webrtc_make_ref_counted_internal::HasAddRefAndRelease<T>::value,
         T>::type* = nullptr>
+#if defined(ABSL_LTS_RELEASE_VERSION) && ABSL_LTS_RELEASE_VERSION < 20250512
 absl::Nonnull<scoped_refptr<T>> make_ref_counted(Args&&... args) {
+#else
+absl_nonnull scoped_refptr<T> make_ref_counted(Args&&... args) {
+#endif
   return scoped_refptr<T>(new T(std::forward<Args>(args)...));
 }
 
@@ -113,7 +122,11 @@ template <
             !webrtc_make_ref_counted_internal::HasAddRefAndRelease<T>::value,
 
         T>::type* = nullptr>
+#if defined(ABSL_LTS_RELEASE_VERSION) && ABSL_LTS_RELEASE_VERSION < 20250512
 absl::Nonnull<scoped_refptr<FinalRefCountedObject<T>>> make_ref_counted(
+#else
+absl_nonnull scoped_refptr<FinalRefCountedObject<T>> make_ref_counted(
+#endif
     Args&&... args) {
   return scoped_refptr<FinalRefCountedObject<T>>(
       new FinalRefCountedObject<T>(std::forward<Args>(args)...));

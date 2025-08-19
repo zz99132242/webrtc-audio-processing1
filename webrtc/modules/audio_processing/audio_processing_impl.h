@@ -20,6 +20,7 @@
 #include <string>
 #include <vector>
 
+#include "absl/base/config.h"
 #include "absl/base/nullability.h"
 #include "absl/strings/string_view.h"
 #include "api/array_view.h"
@@ -74,11 +75,19 @@ class AudioProcessingImpl : public AudioProcessing {
   bool CreateAndAttachAecDump(
       absl::string_view file_name,
       int64_t max_log_size_bytes,
+#if defined(ABSL_LTS_RELEASE_VERSION) && ABSL_LTS_RELEASE_VERSION < 20250512
       absl::Nonnull<TaskQueueBase*> worker_queue) override;
+#else
+      TaskQueueBase* absl_nonnull worker_queue) override;
+#endif
   bool CreateAndAttachAecDump(
       FILE* handle,
       int64_t max_log_size_bytes,
+#if defined(ABSL_LTS_RELEASE_VERSION) && ABSL_LTS_RELEASE_VERSION < 20250512
       absl::Nonnull<TaskQueueBase*> worker_queue) override;
+#else
+      TaskQueueBase* absl_nonnull worker_queue) override;
+#endif
   // TODO(webrtc:5298) Deprecated variant.
   void AttachAecDump(std::unique_ptr<AecDump> aec_dump) override;
   void DetachAecDump() override;
