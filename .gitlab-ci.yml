@@ -146,7 +146,7 @@ build-vendored-absl-aarch64:
 # https://gitlab.freedesktop.org/gstreamer/orc/-/blob/main/.gitlab-ci.yml
 vs2019 amd64:
   # Update from https://gitlab.freedesktop.org/gstreamer/gstreamer/container_registry
-  image: 'registry.freedesktop.org/gstreamer/gstreamer/amd64/windows:2023-04-21.0-main'
+  image: 'registry.freedesktop.org/gstreamer/gstreamer/amd64/windows:2025-04-15.0-main'
   stage: 'build'
   tags:
     - 'docker'
@@ -259,7 +259,7 @@ ios arm64:
 # https://gitlab.freedesktop.org/gstreamer/orc/-/blob/main/.gitlab-ci.yml
 android fedora arm64:
   # Update from https://gitlab.freedesktop.org/gstreamer/cerbero/container_registry
-  image: 'registry.freedesktop.org/gstreamer/cerbero/amd64/android-fedora:2021-10-22.0-1.18'
+  image: 'registry.freedesktop.org/gstreamer/cerbero/android:2024-11-01.0'
   stage: 'build'
   artifacts:
     expire_in: '5 days'
